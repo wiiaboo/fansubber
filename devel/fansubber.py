@@ -2,35 +2,12 @@
 # -*- coding: utf-8 -*-
 
 import sys, os, zlib
+from crc32 import crc32_checksum
+from fonts import getfonts
 
 #import subprocess
 #import shutil
 #from optparse import OptionParser
-
-def crc32_checksum(filename):
-    crc = 0
-    p_reset = "\x08"*8
-    file = open(filename, "rb")
-    buff_size = 65536
-    size = os.path.getsize(filename)
-    done = 0
-    try:
-        while True:
-            data = file.read(buff_size)
-            done += buff_size
-            sys.stdout.write("%7d"%(done*100/size) + "%" + p_reset)
-            if not data:
-                break
-            crc = zlib.crc32(data, crc)
-    except KeyboardInterrupt:
-        sys.stdout.write(p_reset)
-        file.close()
-        sys.exit(1)
-    sys.stdout.write(p_reset)
-    file.close()
-    if crc < 0:
-        crc &= 2**32-1
-    return "%.8X" %(crc)
 
 if os.name == 'nt':
     zip = '"C:\\Program Files\\7-Zip\\7z.exe" a '
@@ -54,7 +31,9 @@ def proj():
     return project
 
 if len(sys.argv) > 1:
-    if sys.argv[1] == 'fma' or 'chi' or 'pack':
+    if ('fma', 'chi', 'pack') in sys.argv[1]:
+        print "success"
+        exit()
         project = sys.argv[1]
     else: project = proj()
 else:
@@ -124,7 +103,6 @@ if project == 'pack':
 
 # Needless
 if project == 'needless':
-    
     raw = sys.argv[2] or "raw.mkv"
     subs = sys.argv[3] or "final.ass"
     rawsource = raw_input("Who's the raw from? [default: Zero-Raws] ") or ''
@@ -143,11 +121,7 @@ if project == 'needless':
         chapters = ' --chapter-language "por" --chapters chapters.xml'
     else:
         chapters = ''
-    fontlist = sys.argv[4:]# or os.listdir("../fonts/")
-    fonts = ''
-    for font in fontlist:
-        fonts = fonts + ' --attachment-mime-type application/x-truetype-font' \
-            + ' --attachment-name ' + font[9:] + ' --attach-file ' + font
+    fonts = getfonts(mkvmerge=1)
     print "muxing... "
     comando = 'mkvmerge -o "' + muxed + '" --language "1:jpn"' + rawsource + \
         ' --default-track "1:yes" ' \
@@ -157,6 +131,7 @@ if project == 'needless':
         ' -A "' + subs + '" --track-order "0:1,0:2,1:0" ' + fonts + title \
         + chapters
     print comando
+    exit()
     os.system(comando)
     print "checksumming... "
     crc = crc32_checksum(muxed)
@@ -182,7 +157,7 @@ if project == 'needless':
     os.remove(batfile)
     print "done. Enjoy [GarSubs] Needless - " + epno + \
         ": " + title + "! CRC is: " + crc
-
+    
 # Saint Seiya
 if project == 'ss':
     show = "Saint Seiya: The Lost Canvas"
