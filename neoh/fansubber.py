@@ -4,10 +4,11 @@
 # Bibliotecas
 import sqlite3, os, re, sys
 from optparse import OptionParser
+from sys import argv
 
 #Variáveis Globais
 bd = 'fansub.sqlite'    # Nome da base de dados
-mkvmerge = 'mkvmerge'   # Localização do mkvmerge
+mkvmerge = 'mkvmerge'   # Localização do mkvmerge // É sempre "mkvmerge", acho que não é preciso.
 
 # Cria uma nova base de dados se não existir
 if not os.path.isfile(bd):
@@ -42,7 +43,7 @@ def execDatabase(statement, screen = False, feedback = True):
 
 ''' Devolve o tipo de argumento recebido '''
 def getType(arg):
-    types = {'subs' : ['sub', 'ass', 'srt'], 'video' : ['avi', 'mkv', 'mp4'], 'fonts' : ['ttf', 'otf'], 'chapters' : ['xml'], 'projects' : ['fma']}
+    types = {'subs' : ['ssa', 'ass', 'srt'], 'video' : ['avi', 'mkv', 'mp4'], 'fonts' : ['ttf', 'otf'], 'chapters' : ['xml'], 'projects' : ['fma']}
 
     try:
         return [type for type in types if arg[-3:].lower() in types[type]].pop()
@@ -63,7 +64,7 @@ mkvmerge
 --track-order "0:1,0:2,1:0"
 
 # uma linha destas por cada fonte
---attachment-mime-type "application/x-truetype-font" --attachment-name "<filename da fonte>" --attach-file "<sítio onde está a fonte>"
+--attachment-mime-type "application/x-truetype-font" --attach-file "<sítio onde está a fonte>"
 
 --title "<fansub> <nome projecto> <título do ep>" --chapters "<capitulos>"
 '''
