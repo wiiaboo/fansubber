@@ -1,0 +1,13 @@
+DROP TABLE IF EXISTS "encodes";
+CREATE TABLE "encodes" ("id" INTEGER PRIMARY KEY  AUTOINCREMENT  NOT NULL , "fansub" INTEGER NOT NULL , "name" TEXT NOT NULL , "short" TEXT NOT NULL , "param" TEXT);
+INSERT INTO "encodes" VALUES(1,1,'Fullmetal Alchemist (2009)','fma','<mux> <raw=Raws-4U> <sub=1><fonts> <chapters>');
+INSERT INTO "encodes" VALUES(2,1,'Saint Seiya: The Lost Canvas','ss','<mux> <raw=QTS> <audio> <sub=1><fonts> <chapters>');
+DROP TABLE IF EXISTS "fansub";
+CREATE TABLE "fansub" ("id" INTEGER PRIMARY KEY  AUTOINCREMENT  NOT NULL , "name" TEXT NOT NULL , "short" TEXT NOT NULL , "site" TEXT, "tracker" TEXT);
+INSERT INTO "fansub" VALUES(1,'Fight da Powa','FDP','http://fdp.fansubban.org/','http://tracker.fansubban.org:6969/announce');
+DROP TABLE IF EXISTS "sqlite_sequence";
+CREATE TABLE sqlite_sequence(name,seq);
+INSERT INTO "sqlite_sequence" VALUES('fansub',1);
+INSERT INTO "sqlite_sequence" VALUES('encodes',2);
+DROP TABLE IF EXISTS "sqlite_stat1";
+CREATE TABLE sqlite_stat1(tbl,idx,stat);
