@@ -50,7 +50,7 @@ def getType(arg):
     except:
         return
 
-'''
+"""
 mkvmerge
 
 # muxed ep
@@ -67,7 +67,15 @@ mkvmerge
 --attachment-mime-type "application/x-truetype-font" --attach-file "<sítio onde está a fonte>"
 
 --title "<fansub> <nome projecto> <título do ep>" --chapters "<capitulos>"
-'''
+"""
+
+def mux(muxed, video, videoTitle, aspectRatio = "16/9", audio = False, audioTitle, title, subs, fonts, chapters):
+        command = '''{} -o {} ''' % (mkvmerge, muxed)
+        command += '''--language "1:jpn --track-name "1:{}" --default-track "1:yes" --aspect-ratio "1:{}" ''' % (videoTitle, aspectRatio)
+        if not audio:
+                command += '''--language "2:jpn" --trackname "2:{}" --default-track "2:yes" -a 2 -d 1 -S --no-global-tags --no-chapters "{}" ''' % (audioTitle, video)
+        else:
+                command += '''-d 1 -A -S --no-global-tags --no-chapters "{}" --language "2:jpn" --trackname "1:{}" --default-track "1:yes" -a 1 -D -S --no-global-tags --no-chapters "{}" ''' % (video, audioTitle, audio)
 
 def getSource(arg):
     try:
