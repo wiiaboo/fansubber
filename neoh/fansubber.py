@@ -69,7 +69,7 @@ mkvmerge
 --title "<fansub> <nome projecto> <título do ep>" --chapters "<capitulos>"
 """
 
-def mux(muxed, video, videoTitle, aspectRatio="16/9", audio=False, audioTitle, title, subs, subTitle, fonts, chapters=False:
+def mux(muxed, video, videoTitle, aspectRatio="16/9", audio=False, audioTitle, title, subs, subTitle, fonts, chapters=False):
     command = '{} -o {}'.format(mkvmerge, muxed)
     command += ' --language "1:jpn --track-name "1:{}" --default-track "1:yes" --aspect-ratio "1:{}"'.format(videoTitle, aspectRatio)
     files = 1
