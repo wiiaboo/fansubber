@@ -2,7 +2,7 @@
 ''' Fansubber Teste '''
 
 # Bibliotecas
-import sqlite3, os, re, sys
+import sqlite3, os, re, sys, glob
 from optparse import OptionParser
 from sys import argv
 
@@ -69,13 +69,31 @@ mkvmerge
 --title "<fansub> <nome projecto> <título do ep>" --chapters "<capitulos>"
 """
 
-def mux(muxed, video, videoTitle, aspectRatio = "16/9", audio = False, audioTitle, title, subs, fonts, chapters):
-        command = '''{} -o {} ''' % (mkvmerge, muxed)
-        command += '''--language "1:jpn --track-name "1:{}" --default-track "1:yes" --aspect-ratio "1:{}" ''' % (videoTitle, aspectRatio)
-        if not audio:
-                command += '''--language "2:jpn" --trackname "2:{}" --default-track "2:yes" -a 2 -d 1 -S --no-global-tags --no-chapters "{}" ''' % (audioTitle, video)
-        else:
-                command += '''-d 1 -A -S --no-global-tags --no-chapters "{}" --language "2:jpn" --trackname "1:{}" --default-track "1:yes" -a 1 -D -S --no-global-tags --no-chapters "{}" ''' % (video, audioTitle, audio)
+def mux(muxed, video, videoTitle, aspectRatio="16/9", audio=False, audioTitle, title, subs, subTitle, fonts, chapters=False:
+    command = '{} -o {}'.format(mkvmerge, muxed)
+    command += ' --language "1:jpn --track-name "1:{}" --default-track "1:yes" --aspect-ratio "1:{}"'.format(videoTitle, aspectRatio)
+    files = 1
+    trackorder = '0:1'
+    if not audio:
+        command += ' --language "2:jpn" --trackname "2:{}" --default-track "2:yes" -a 2 -d 1 -S --no-global-tags --no-chapters "{}"'.format(audioTitle, video)
+        trackorder = ',0:2'
+    else:
+        command += ' -d 1 -A -S --no-global-tags --no-chapters "{}" --language "1:jpn" --trackname "1:{}" --default-track "1:yes" -a 1 -D -S --no-global-tags --no-chapters "{}"'.format(video, audioTitle, audio)
+        files += 1
+        trackorder = ',1:1'
+    if len(subs) == 1:
+        command += ' --language "0:Por" --track-name "0:{}" --default-track "0:yes" -s 0 {}'.format(subTitle, subs)
+        trackorder += ',{}:0'.format(files)
+    else:
+        for sub in subs:
+            # TODO: Criar uma linha por cada sub, mas permitir mudança de linguagem, caso se queira mux de várias línguas
+    command += ' --track-order "{}"'.format(trackorder)
+    for font in fonts:
+        command += ' --attachment-mime-type "application/x-truetype-font" --attach-file "{}"'.format(font)
+    command += ' --title "{}"'.format(title)
+    if chapters:
+        command += ' --chapters "{}"'.format(chapters)
+    
 
 def getSource(arg):
     try:
